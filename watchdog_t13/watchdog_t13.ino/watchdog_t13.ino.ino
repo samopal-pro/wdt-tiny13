@@ -28,22 +28,8 @@ int main(){
    DDRB &= ~(1 << PB4);    // pinMode(PB4, INPUT_PULLUP);  
    PORTB |= (1 << PB4);    
 // Определяам время срабатывание таймера по входам PB2,PB3,PB4 (перемычки подтягивают к земле) (период, сек = TM/4 )
-   uint16_t TM = 0;
-   bool pb2 = false;
-   bool pb3 = false;
-   bool pb4 = false;
-   if( PINB & (1 << PINB2) )pb2 = true;
-   if( PINB & (1 << PINB3) )pb3 = true;
-   if( PINB & (1 << PINB4) )pb4 = true;
-
-   if( pb2 == true  && pb3 == true  && pb4 == true )TM = 4;         //Таймаут 1 сек
-   else if( pb2 == false && pb3 == true  && pb4 == true  )TM = 8;   //Таймаут 2 сек
-   else if( pb2 == true  && pb3 == false && pb4 == true  )TM = 20;  //Таймаут 5 сек
-   else if( pb2 == false && pb3 == false && pb4 == true  )TM = 40;  //Таймаут 10 сек
-   else if( pb2 == true  && pb3 == true  && pb4 == false )TM = 80;  //Таймаут 20 сек
-   else if( pb2 == false && pb3 == true  && pb4 == false )TM = 120; //Таймаут 30 сек
-   else if( pb2 == true  && pb3 == false && pb4 == false )TM = 240; //Таймаут 60 сек
-   else if( pb2 == false && pb3 == false && pb4 == false )TM = 480; //Таймаут 120 сек
+   static const uint16_t AT[] PROGMEM ={4,8,20,40,80,120,240,480};
+   uint16_t TM=AT[((PINB & 0x1C)>>2)];
    pb1_count = 0;
    pb1_state = false;
 // Отключаем ADC
